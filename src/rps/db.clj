@@ -5,9 +5,9 @@
 
 (defn add-element-to-db
   [el]
-  (let [results (sql/insert! db-spec :dataset {:element el} )]
+  (let [results (sql/insert! db-spec :dataset [:element] [el] )]
     (assert (= (count results) 1))
-    (first (vals results))))
+    (:id (first results))))
 
 (defn set-partition
   []
