@@ -15,7 +15,7 @@
     (sql/db-do-commands spec
                         (sql/create-table-ddl
                          :dataset
-                         [[:id :serial "PRIMARY KEY"]
+                         [:id :serial "PRIMARY KEY"]
                          [:element :varchar "NOT NULL"]
-                         ]))
+                         ))
     (println " done")))
