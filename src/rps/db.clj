@@ -1,30 +1,19 @@
 (ns rps.db
   (:require [clojure.java.jdbc :as sql]))
 
-(def db-spec {:classname "org.h2.Driver"
-              :subprotocol "h2:file"
-              :subname "db/rps"})
+(def db-spec (System/getenv "DATABASE_URL"))
 
 (defn add-element-to-db
   [el]
-  (let [results (sql/with-connection db-spec
-                  (sql/insert-record :dataset
-                                     {:element el}))]
+  (let [results (sql/insert! db-spec :dataset {:element el} )]
     (assert (= (count results) 1))
     (first (vals results))))
 
 (defn set-partition
   []
-  (let [results (sql/with-connection db-spec
-                  (sql/with-query-results res
-                    ["select element from dataset"]
-                    (doall res)))]
-     (partition-all 3 (shuffle results))))
+  (let [results (into [] (sql/query db-spec ["select element from dataset"]))]
+     (partition-all 2 (shuffle results))))
 
 (defn get-all-data
   []
-  (let [results (sql/with-connection db-spec
-                  (sql/with-query-results res
-                    ["select id, element from dataset"]
-                    (doall res)))]
-    results))
+  (into [] (sql/query db-spec ["select * from dataset"])))

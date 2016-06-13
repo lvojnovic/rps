@@ -3,8 +3,10 @@
             [compojure.core :as cc]
             [compojure.handler :as handler]
             [compojure.route :as route]
-            [ring.adapter.jetty :as jetty])
+            [ring.adapter.jetty :as jetty]
+            [rps.migration :as schema]) 
   (:gen-class))
+
 
 (cc/defroutes app-routes
   (cc/GET "/"
@@ -27,6 +29,7 @@
 
 (defn -main
   [& [port]]
+  (schema/migrate)
   (let [port (Integer. (or port
                            (System/getenv "PORT")
                            5000))]
